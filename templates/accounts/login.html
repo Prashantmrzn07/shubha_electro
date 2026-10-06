@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Sign in | Shuba Electronics{% endblock %}
+
+{% block content %}
+<div class="auth-page-wrap">
+  <div class="yt-auth-card">
+    <div class="yt-auth-header">
+      <div class="yt-auth-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <h1>Sign in</h1>
+      <p>to continue to Shuba Electronics</p>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="yt-form-error-banner">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="yt-form-group">
+        <label for="{{ form.username.id_for_label }}">Gmail or Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <span class="yt-field-error">{{ form.username.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="yt-form-group">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <span class="yt-field-error">{{ form.password.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <div class="yt-auth-footer">
+        <a class="text-link" href="{% url 'accounts:register' %}">Create account</a>
+        <button class="yt-auth-btn accent" type="submit">Sign in</button>
+      </div>
+    </form>
+
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); text-align: center;">
+      <a class="text-link" style="font-size:13px; color:var(--muted)" href="{% url 'accounts:admin_login' %}">
+        Shop Administrator portal &rarr;
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

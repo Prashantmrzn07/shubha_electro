@@ -1,0 +1,37 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="stack">
+  <h1>Products & inventory</h1>
+  <a class="btn accent" href="{% url 'dashboard:product_create' %}">Add product</a>
+</div>
+<form method="get" class="stack"><input class="input" name="q" value="{{ q }}" placeholder="Search"><button class="btn">Search</button></form>
+<table class="table">
+  <thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr></thead>
+  {% for product in products %}
+    <tr>
+      <td>
+        {% if product.image %}
+          <img class="admin-product-thumb" src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <span class="muted">No image</span>
+        {% endif %}
+      </td>
+      <td>{{ product.name }} {% if not product.is_active %}<span class="muted">(hidden)</span>{% endif %}</td>
+      <td>{{ product.category }} / {{ product.brand }}</td>
+      <td>NPR {{ product.price }}</td>
+      <td>
+        <form method="post" action="{% url 'dashboard:inventory_update' product.pk %}" class="stack">{% csrf_token %}
+          <input class="input" style="width:80px" name="stock" value="{{ product.stock }}">
+          <button class="btn small">Save</button>
+          {% if product.stock <= low_stock_threshold %}<span class="low">Low</span>{% endif %}
+        </form>
+      </td>
+      <td class="stack">
+        <a class="btn small ghost" href="{% url 'dashboard:product_edit' product.pk %}">Edit</a>
+        <form method="post" action="{% url 'dashboard:product_delete' product.pk %}">{% csrf_token %}<button class="btn small danger">Delete</button></form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

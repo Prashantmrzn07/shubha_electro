@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="product-layout">
+  <div class="card">
+    <div class="thumb" style="height:320px">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}{{ product.brand }}{% endif %}</div>
+  </div>
+  <div>
+    <p class="muted">{{ product.brand }} · {{ product.category }} · Warranty: {{ product.warranty }}</p>
+    <h1>{{ product.name }}</h1>
+    <p class="price">NPR {{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <h3>Specifications</h3>
+    <ul class="spec-list">{% for line in product.spec_lines %}<li>{{ line }}</li>{% endfor %}</ul>
+    <p>{% if product.in_stock %}<span class="ok">Available ({{ product.stock }} in stock)</span>{% else %}<span class="out">Currently unavailable</span>{% endif %}</p>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'cart:add' product.id %}" class="stack">{% csrf_token %}
+        <input class="input" style="max-width:90px" type="number" name="quantity" value="1" min="1" max="{{ product.stock|default:1 }}">
+        <button class="btn accent" {% if not product.in_stock %}disabled{% endif %}>Add to cart</button>
+      </form>
+    {% else %}
+      <p><a class="btn" href="{% url 'accounts:login' %}">Login to add to cart</a></p>
+    {% endif %}
+  </div>
+</div>
+<section class="card"><div class="card-body">
+  <h2>Reviews {% if avg_rating %}· {{ avg_rating|floatformat:1 }} / 5{% endif %}</h2>
+  {% for review in reviews %}
+    <div class="review"><strong>{{ review.user.username }}</strong> — {{ review.rating }}/5<p>{{ review.comment }}</p></div>
+  {% empty %}
+    <p class="muted">No reviews yet.</p>
+  {% endfor %}
+  {% if can_review %}
+    <form method="post" action="{% url 'catalog:add_review' product.slug %}">{% csrf_token %}
+      <label>Rating</label>
+      <select name="rating">{% for n in "12345" %}<option value="{{ n }}">{{ n }}</option>{% endfor %}</select>
+      <label>Comment</label>
+      <textarea class="input" name="comment" rows="3" required></textarea>
+      <p><button class="btn">Submit review</button></p>
+    </form>
+  {% elif user.is_authenticated %}
+    <p class="muted">Reviews are available after you purchase this product.</p>
+  {% endif %}
+</div></section>
+{% endblock %}

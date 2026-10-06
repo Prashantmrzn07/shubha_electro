@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<div class="product-layout">
+  <div class="card"><div class="card-body">
+    <h2>Delivery details</h2>
+    <form method="post">
+      {% csrf_token %}
+      <label>Full name</label>
+      <input class="input" name="full_name" value="{{ user.get_full_name }}" required>
+      <label>Phone</label>
+      <input class="input" name="phone" value="{{ user.phone }}" required>
+      <label>Address</label>
+      <textarea class="input" name="address" rows="3" required>{{ user.address }}</textarea>
+      <label>City</label>
+      <input class="input" name="city" value="Kathmandu">
+      <label>Notes</label>
+      <input class="input" name="notes">
+      <h3>Payment (mock)</h3>
+      <label><input type="radio" name="payment_method" value="cod" checked> Cash on delivery</label>
+      <label><input type="radio" name="payment_method" value="mock_card"> Mock card payment</label>
+      <label>Mock card result</label>
+      <select name="mock_result">
+        <option value="paid">Succeed (mark paid)</option>
+        <option value="failed">Fail (simulate decline)</option>
+      </select>
+      <p><button class="btn accent">Confirm order</button></p>
+    </form>
+  </div></div>
+  <div class="card"><div class="card-body">
+    <h2>Order summary</h2>
+    {% for item in items %}
+      <p>{{ item.product.name }} × {{ item.quantity }} — NPR {{ item.line_total }}</p>
+    {% endfor %}
+    <p class="price">Total NPR {{ total }}</p>
+  </div></div>
+</div>
+{% endblock %}

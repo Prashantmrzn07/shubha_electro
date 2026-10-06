@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Home | Shuba Electronics{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Reliable tech for everyday living</p>
+    <h1>Make home feel smarter.</h1>
+    <p>Shop TVs, refrigerators, washing machines, ACs and more with clear specs, honest stock information and delivery to your door.</p>
+    <p class="stack"><a class="btn accent" href="{% url 'catalog:product_list' %}">Explore products <span aria-hidden="true">→</span></a><a class="hero-link" href="#featured">See featured picks</a></p>
+  </div>
+  <div class="hero-note"><strong>Shop with confidence</strong><span>Warranty details and availability shown on every product.</span></div>
+</section>
+<div class="section-heading"><div><p class="eyebrow">Find your fit</p><h2>Shop by category</h2></div><a class="text-link" href="{% url 'catalog:product_list' %}">View all products →</a></div>
+<div class="grid cards-3">
+  {% for category in categories %}
+    <a class="card" href="{% url 'catalog:product_list' %}?category={{ category.slug }}">
+      <div class="card-body">
+        <h3>{{ category.name }}</h3>
+        <p class="muted">{{ category.description }}</p>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+<div id="featured" class="section-heading"><div><p class="eyebrow">Curated for you</p><h2>Featured products</h2></div></div>
+<div class="grid cards-4 product-grid">
+  {% for product in featured %}
+    {% include "catalog/_product_card.html" %}
+  {% empty %}
+    <p>No products yet. Run <code>python manage.py seed</code>.</p>
+  {% endfor %}
+</div>
+{% endblock %}

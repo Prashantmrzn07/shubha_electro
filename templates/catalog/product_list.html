@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Products | Shuba Electronics{% endblock %}
+{% block content %}
+<div class="page-intro"><div><p class="eyebrow">The complete collection</p><h1>Find your next essential</h1><p class="muted">Compare trusted brands, useful specs and current availability.</p></div><span class="result-count">{{ page.paginator.count }} products</span></div>
+<form class="filters" method="get">
+  <div><label>Search</label><input class="input" name="q" value="{{ filters.q }}"></div>
+  <div>
+    <label>Category</label>
+    <select name="category">
+      <option value="">All</option>
+      {% for category in categories %}
+        <option value="{{ category.slug }}" {% if filters.category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Brand</label>
+    <select name="brand">
+      <option value="">All</option>
+      {% for brand in brands %}
+        <option value="{{ brand.slug }}" {% if filters.brand == brand.slug %}selected{% endif %}>{{ brand.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div><label>Min price (NPR)</label><input class="input" type="number" min="0" name="min_price" value="{{ filters.min_price }}"></div>
+  <div><label>Max price (NPR)</label><input class="input" type="number" min="0" name="max_price" value="{{ filters.max_price }}"></div>
+  <div><label>Spec keyword</label><input class="input" name="spec" value="{{ filters.spec }}" placeholder="e.g. inverter"></div>
+  <div class="filter-actions"><button class="btn" type="submit">Apply filters</button><a class="text-link" href="{% url 'catalog:product_list' %}">Clear</a></div>
+</form>
+<div class="grid cards-4 product-grid">
+  {% for product in page %}
+    {% include "catalog/_product_card.html" %}
+  {% empty %}
+    <p>No products match those filters.</p>
+  {% endfor %}
+</div>
+<div class="pagination">
+  {% if page.has_previous %}<a class="btn ghost" href="?page={{ page.previous_page_number }}&q={{ filters.q }}&category={{ filters.category }}&brand={{ filters.brand }}&min_price={{ filters.min_price }}&max_price={{ filters.max_price }}&spec={{ filters.spec }}">Previous</a>{% endif %}
+  <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn ghost" href="?page={{ page.next_page_number }}&q={{ filters.q }}&category={{ filters.category }}&brand={{ filters.brand }}&min_price={{ filters.min_price }}&max_price={{ filters.max_price }}&spec={{ filters.spec }}">Next</a>{% endif %}
+</div>
+{% endblock %}

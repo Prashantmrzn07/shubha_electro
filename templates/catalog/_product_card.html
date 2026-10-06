@@ -1,0 +1,9 @@
+<a class="card product-card" href="{{ product.get_absolute_url }}">
+  <div class="thumb">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}{{ product.category.name }}{% endif %}</div>
+  <div class="card-body">
+    <div class="product-meta"><span>{{ product.brand }}</span><span>{{ product.category }}</span></div>
+    <h3>{{ product.name }}</h3>
+    <div class="price">NPR {{ product.price }}</div>
+    <div class="product-footer">{% if product.in_stock %}<div class="ok">In stock</div>{% else %}<div class="out">Out of stock</div>{% endif %}<span class="card-arrow" aria-hidden="true">→</span></div>
+  </div>
+</a>

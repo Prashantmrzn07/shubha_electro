@@ -1,0 +1,24 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Reviews{% endblock %}
+{% block content %}
+<h1>Product reviews</h1>
+<table class="table">
+  <thead><tr><th>Product</th><th>Customer</th><th>Rating</th><th>Comment</th><th>Visible</th><th></th></tr></thead>
+  {% for review in reviews %}
+    <tr>
+      <td>{{ review.product }}</td>
+      <td>{{ review.user }}</td>
+      <td>{{ review.rating }}</td>
+      <td>{{ review.comment }}</td>
+      <td>{% if review.is_visible %}Yes{% else %}Hidden{% endif %}</td>
+      <td>
+        <form method="post" action="{% url 'dashboard:review_toggle' review.pk %}">{% csrf_token %}
+          <button class="btn small">Toggle</button>
+        </form>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">No reviews yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

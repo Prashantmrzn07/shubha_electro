@@ -1,0 +1,34 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Sales and order reports</h1>
+<form class="stack" method="get">
+  <div><label>From</label><input class="input" type="date" name="start" value="{{ start }}"></div>
+  <div><label>To</label><input class="input" type="date" name="end" value="{{ end }}"></div>
+  <div style="align-self:end"><button class="btn">Apply</button> <a class="btn ghost" href="{% url 'dashboard:reports_csv' %}?start={{ start }}&end={{ end }}">Export CSV</a></div>
+</form>
+<div class="stats">
+  <div class="stat"><span>Orders</span><b>{{ summary.order_count }}</b></div>
+  <div class="stat"><span>Paid orders</span><b>{{ summary.paid_count }}</b></div>
+  <div class="stat"><span>Cancelled</span><b>{{ summary.cancelled }}</b></div>
+  <div class="stat"><span>Revenue</span><b>NPR {{ summary.revenue }}</b></div>
+</div>
+<h2>By status</h2>
+<table class="table">
+  {% for row in by_status %}
+    <tr><td>{{ row.status }}</td><td>{{ row.count }}</td><td>NPR {{ row.total|default:0 }}</td></tr>
+  {% endfor %}
+</table>
+<h2>Orders in range</h2>
+<table class="table">
+  {% for order in orders %}
+    <tr>
+      <td><a href="{% url 'dashboard:order_detail' order.pk %}">#{{ order.pk }}</a></td>
+      <td>{{ order.created_at }}</td>
+      <td>{{ order.user }}</td>
+      <td>{{ order.status }}</td>
+      <td>NPR {{ order.total }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

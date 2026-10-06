@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<h1>Customers</h1>
+<table class="table">
+  <thead><tr><th>Username</th><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th></tr></thead>
+  {% for customer in customers %}
+    <tr>
+      <td>{{ customer.username }}</td>
+      <td>{{ customer.get_full_name }}</td>
+      <td>{{ customer.email }}</td>
+      <td>{{ customer.phone }}</td>
+      <td>{{ customer.order_count }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">No customers yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

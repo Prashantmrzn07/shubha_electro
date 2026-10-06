@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.pk }}{% endblock %}
+{% block content %}
+<h1>Order #{{ order.pk }}</h1>
+<p>Placed {{ order.created_at }} · Status: <strong>{{ order.get_status_display }}</strong></p>
+<table class="table">
+  <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+  <tbody>
+  {% for item in order.items.all %}
+    <tr><td>{{ item.product_name }}</td><td>{{ item.quantity }}</td><td>NPR {{ item.line_total }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="price">Total NPR {{ order.total }}</p>
+<div class="grid cards-3">
+  <div class="card"><div class="card-body">
+    <h3>Payment</h3>
+    <p>{{ order.payment.get_method_display }} — {{ order.payment.get_status_display }}</p>
+    <p class="muted">Ref: {{ order.payment.reference }}</p>
+  </div></div>
+  <div class="card"><div class="card-body">
+    <h3>Delivery</h3>
+    <p>{{ order.delivery.full_name }} · {{ order.delivery.phone }}</p>
+    <p>{{ order.delivery.address }}, {{ order.delivery.city }}</p>
+    <p>Status: {{ order.delivery.get_status_display }}</p>
+  </div></div>
+</div>
+{% endblock %}

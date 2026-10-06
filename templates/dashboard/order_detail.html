@@ -1,0 +1,20 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Order #{{ order.pk }}{% endblock %}
+{% block content %}
+<h1>Manage order #{{ order.pk }}</h1>
+<p>Customer: {{ order.user.get_full_name }} ({{ order.user.username }})</p>
+<table class="table">
+  {% for item in order.items.all %}
+    <tr><td>{{ item.product_name }}</td><td>{{ item.quantity }}</td><td>NPR {{ item.line_total }}</td></tr>
+  {% endfor %}
+</table>
+<form method="post" class="card"><div class="card-body">
+  {% csrf_token %}
+  <h3>Order status</h3>{{ order_form.as_p }}
+  <h3>Payment</h3>{{ payment_form.as_p }}
+  <h3>Delivery</h3>
+  <p>{{ order.delivery.full_name }} · {{ order.delivery.phone }}<br>{{ order.delivery.address }}, {{ order.delivery.city }}</p>
+  {{ delivery_form.as_p }}
+  <button class="btn">Update order</button>
+</div></form>
+{% endblock %}

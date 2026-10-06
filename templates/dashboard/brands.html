@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Brands{% endblock %}
+{% block content %}
+<h1>Brands</h1>
+<form method="post" class="card"><div class="card-body">{% csrf_token %}{{ form.as_p }}<button class="btn">Add brand</button></div></form>
+<table class="table">
+  <thead><tr><th>Name</th><th>Products</th><th></th></tr></thead>
+  {% for brand in brands %}
+    <tr>
+      <td>{{ brand.name }}</td>
+      <td>{{ brand.product_count }}</td>
+      <td class="stack">
+        <a class="btn small ghost" href="{% url 'dashboard:brand_edit' brand.pk %}">Edit</a>
+        <form method="post" action="{% url 'dashboard:brand_delete' brand.pk %}">{% csrf_token %}<button class="btn small danger">Delete</button></form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

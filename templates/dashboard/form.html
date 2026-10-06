@@ -1,0 +1,16 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post" enctype="multipart/form-data" class="card"><div class="card-body">
+  {% csrf_token %}
+  {% if form.instance.image %}
+    <div class="image-upload-preview">
+      <p class="muted">Current product image</p>
+      <img src="{{ form.instance.image.url }}" alt="{{ form.instance.name }}">
+    </div>
+  {% endif %}
+  {{ form.as_p }}
+  <button class="btn">Save</button>
+</div></form>
+{% endblock %}

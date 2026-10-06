@@ -1,0 +1,69 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<h1>Shop overview</h1>
+<div class="stats">
+  <div class="stat"><span>Products</span><b>{{ product_count }}</b></div>
+  <div class="stat"><span>Active products</span><b>{{ active_product_count }}</b></div>
+  <div class="stat"><span>Customers</span><b>{{ customer_count }}</b></div>
+  <div class="stat"><span>Orders</span><b>{{ order_count }}</b></div>
+  <div class="stat"><span>Paid revenue</span><b>NPR {{ revenue }}</b></div>
+  <div class="stat"><span>Orders today</span><b>{{ today_orders }}</b></div>
+  <div class="stat"><span>Delivered orders</span><b>{{ fulfilled_count }}</b></div>
+</div>
+<div class="section-heading">
+  <div><p class="eyebrow">Progress analytics</p><h2>Last 7 days</h2></div>
+  <a class="text-link" href="{% url 'dashboard:reports' %}">Open detailed reports →</a>
+</div>
+<div class="analytics-grid">
+  <div class="card"><div class="card-body">
+    <h3>Daily sales</h3>
+    <div class="progress-list">
+      {% for day in daily_progress %}
+        <div class="progress-row">
+          <span title="{{ day.date }}">{{ day.label }}</span>
+          <div class="progress-track"><span style="width: {% widthratio day.orders order_count 100 %}%"></span></div>
+          <b>{{ day.orders }}</b>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="muted">Bars show orders per day. Revenue is shown below for the same period.</p>
+  </div></div>
+  <div class="card"><div class="card-body">
+    <h3>Top products</h3>
+    <table class="table">
+      {% for product in top_products %}
+        <tr><td>{{ product.name }}</td><td class="ok">{{ product.units_sold }} sold</td></tr>
+      {% empty %}
+        <tr><td>No completed sales yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div></div>
+</div>
+<h2>Revenue by day</h2>
+<table class="table">
+  <thead><tr><th>Date</th><th>Orders</th><th>Paid revenue</th></tr></thead>
+  {% for day in daily_progress %}
+    <tr><td>{{ day.date }}</td><td>{{ day.orders }}</td><td>NPR {{ day.revenue }}</td></tr>
+  {% endfor %}
+</table>
+<h2>Low stock</h2>
+<table class="table">
+  {% for product in low_stock %}
+    <tr><td>{{ product.name }}</td><td class="low">{{ product.stock }} left</td></tr>
+  {% empty %}
+    <tr><td>No low-stock items.</td></tr>
+  {% endfor %}
+</table>
+<h2>Recent orders</h2>
+<table class="table">
+  {% for order in recent_orders %}
+    <tr>
+      <td><a href="{% url 'dashboard:order_detail' order.pk %}">#{{ order.pk }}</a></td>
+      <td>{{ order.user }}</td>
+      <td>{{ order.get_status_display }}</td>
+      <td>NPR {{ order.total }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
